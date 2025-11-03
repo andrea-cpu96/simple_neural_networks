@@ -84,7 +84,7 @@ int main(void)
     sim_2();
   }
 
-  return 1;
+  return 0;
 }
 
 static void sim_1(void)
@@ -144,6 +144,7 @@ static void sim_2(void)
 {
   static double mark_best = 0.0;
   double mark = 0.0;
+  int flag = 0;
 
   fish_s1.x = 10;
   fish_s1.y = 9;
@@ -163,26 +164,6 @@ static void sim_2(void)
   NN_1N_read_inputs(sens[0], sens[1]);
 
   draw_scene(fish_s1, fish_s2, source);
-  for (int step = 0; step < 10; step++)
-  {
-    sleep(1);
-
-    NN_1N_elab_output(&neuron_1);
-    execute_action();
-
-    read_sensor_data();
-    NN_1N_read_inputs(sens[0], sens[1]);
-
-    mark = output_evaluation();
-    if (mark > mark_best)
-    {
-      mark_best = mark;
-    }
-
-    draw_scene(fish_s1, fish_s2, source);
-  }
-  evaluate_pos();
-
   do
   {
     sleep(1);
@@ -200,7 +181,18 @@ static void sim_2(void)
     }
 
     draw_scene(fish_s1, fish_s2, source);
-  } while (mark < mark_best);
+
+    if ((mark < mark_best))
+    {
+      flag = 1;
+    }
+
+    if((flag == 1) && (mark == mark_best))
+    {
+      break;
+    }
+  } while (1);
+
   evaluate_pos();
 }
 
